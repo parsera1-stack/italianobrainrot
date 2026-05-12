@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Italiano Brain Rot</string>
+
+    <!-- Уровни -->
+    <string name="level_1">Уровень 1: Тест</string>
+    <string name="level_2">Уровень 2: Письменный</string>
+    <string name="level_3">Уровень 3: Смешанный</string>
+
+    <!-- Кнопки -->
+    <string name="parent_button">Родитель</string>
+    <string name="check">Проверить</string>
+    <string name="next">Далее</string>
+    <string name="enter_answer">Введите ответ</string>
+
+    <!-- Диалоги -->
+    <string name="pin_title">Родительский доступ</string>
+    <string name="pin_hint">Введите PIN</string>
+    <string name="pin_error">Неверный PIN</string>
+    <string name="add_word">Добавить слово</string>
+    <string name="russian">Русский</string>
+    <string name="english">English</string>
+    <string name="import_csv">Загрузить из CSV</string>
+
+    <!-- Фидбек -->
+    <string name="correct">Правильно! 🎉</string>
+    <string name="wrong">Неправильно!</string>
+    <string name="correct_answer">Правильный ответ: %s</string>
+</resources>

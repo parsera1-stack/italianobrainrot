@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Пастельная цветовая гамма -->
+    <color name="cream_background">#FFF8F0</color>
+    <color name="pastel_pink">#FFD1DC</color>
+    <color name="pastel_green">#C1E1C1</color>
+    <color name="pastel_blue">#B0E0E6</color>
+    <color name="pastel_yellow">#FFFACD</color>
+    <color name="pastel_coffee">#D2B48C</color>
+    <color name="pastel_red">#FFB6C1</color>
+
+    <color name="coffee_dark">#4A3728</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+
+    <!-- Статусные цвета -->
+    <color name="success_green">#90EE90</color>
+    <color name="error_red">#FF6B6B</color>
+</resources>

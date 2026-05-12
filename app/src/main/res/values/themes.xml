@@ -1,0 +1,13 @@
+<resources>
+    <style name="Theme.ItalianoBrainRot" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/pastel_coffee</item>
+        <item name="colorPrimaryVariant">@color/coffee_dark</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/pastel_pink</item>
+        <item name="colorSecondaryVariant">@color/pastel_green</item>
+        <item name="colorOnSecondary">@color/coffee_dark</item>
+        <item name="android:statusBarColor">@color/cream_background</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@color/cream_background</item>
+    </style>
+</resources>
