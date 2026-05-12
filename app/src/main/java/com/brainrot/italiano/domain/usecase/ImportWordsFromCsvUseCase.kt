@@ -34,7 +34,7 @@ class ImportWordsFromCsvUseCase @Inject constructor(
 
                     val parts = line.split(",")
                     if (parts.size >= 2) {
-                        val russian = parts[0].trim()
+                        val russian = parts[0].trim().normalizeYo()
                         val english = parts[1].trim().trimArticle()
 
                         if (russian.isNotBlank() && english.isNotBlank()) {
@@ -56,5 +56,9 @@ class ImportWordsFromCsvUseCase @Inject constructor(
 
     private fun String.trimArticle(): String {
         return this.replace(Regex("^(a |an |the |A |An |The )"), "")
+    }
+
+    private fun String.normalizeYo(): String {
+        return this.replace('ё', 'е').replace('Ё', 'Е')
     }
 }

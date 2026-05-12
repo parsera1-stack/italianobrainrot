@@ -21,15 +21,19 @@ class CheckAnswerUseCase @Inject constructor() {
         // Прямое совпадение
         if (normalizedUser == normalizedCorrect) return true
 
+        // Проверка с заменой ё→е (осёл = осел)
+        if (normalizedUser.replaceYo() == normalizedCorrect.replaceYo()) return true
+
         // Проверка синонимов (только для dish)
         if (specialNote != null && specialNote.contains("оба варианта")) {
             val synonyms = listOf("тарелка", "блюдо")
-            if (synonyms.any { it == normalizedUser }) return true
+            val userNormalized = normalizedUser.replaceYo()
+            if (synonyms.any { it.replaceYo() == userNormalized }) return true
         }
 
-        // Для piano/pianos - всегда "пианино"
+        // Для piano/pianos — всегда "пианино"
         if (specialNote != null && specialNote.contains("всегда пианино")) {
-            if (normalizedUser == "пианино") return true
+            if (normalizedUser.replaceYo() == "пианино") return true
         }
 
         return false
@@ -46,5 +50,13 @@ class CheckAnswerUseCase @Inject constructor() {
             .trim()
             .lowercase()
             .replace(Regex("^(a |an |the )"), "")
+    }
+
+    /**
+     * Заменяет ё на е для сравнения
+     * осёл → осел, ёж → еж
+     */
+    private fun String.replaceYo(): String {
+        return this.replace('ё', 'е')
     }
 }

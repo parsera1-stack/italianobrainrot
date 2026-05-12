@@ -10,8 +10,9 @@
     <!-- Кнопки -->
     <string name="parent_button">Родитель</string>
     <string name="check">Проверить</string>
-    <string name="next">Далее</string>
+    <string name="next">Далее →</string>
     <string name="enter_answer">Введите ответ</string>
+    <string name="exit">✕</string>
 
     <!-- Диалоги -->
     <string name="pin_title">Родительский доступ</string>
@@ -24,6 +25,7 @@
 
     <!-- Фидбек -->
     <string name="correct">Правильно! 🎉</string>
-    <string name="wrong">Неправильно!</string>
+    <string name="wrong">Неправильно! 😢</string>
     <string name="correct_answer">Правильный ответ: %s</string>
+    <string name="finished">Все слова выучены! 🎉</string>
 </resources>

@@ -9,7 +9,6 @@ import com.brainrot.italiano.domain.usecase.CheckAnswerUseCase
 import com.brainrot.italiano.domain.usecase.GenerateQuizQuestionUseCase
 import com.brainrot.italiano.data.repository.WordRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -79,10 +78,6 @@ class QuizViewModel @Inject constructor(
             } else {
                 _quizState.value = QuizState.Wrong(character, question.correctAnswer)
             }
-
-            // Автоматический переход к следующему вопросу через 1.5 секунды
-            delay(1500)
-            loadNextQuestion()
         }
     }
 
@@ -91,10 +86,9 @@ class QuizViewModel @Inject constructor(
     }
 
     private fun getSpecialNote(wordId: Long): String? {
-        // Стартовые слова с особыми правилами
         return when (wordId) {
-            4L -> "принимаются оба варианта"  // dish
-            13L, 14L -> "перевод всегда пианино"  // piano/pianos
+            4L -> "принимаются оба варианта"
+            13L, 14L -> "перевод всегда пианино"
             else -> null
         }
     }

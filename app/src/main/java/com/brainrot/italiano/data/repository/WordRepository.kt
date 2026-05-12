@@ -52,7 +52,7 @@ class WordRepository @Inject constructor(
             val defaults = defaultWordDao.getAllDefaultWords()
             val words = defaults.map { default ->
                 WordEntity(
-                    russian = default.russian,
+                    russian = default.russian.normalizeYo(),
                     english = default.english.trimArticle()
                 )
             }
@@ -109,7 +109,7 @@ class WordRepository @Inject constructor(
 
     private fun Word.toEntity(): WordEntity = WordEntity(
         id = id,
-        russian = russian,
+        russian = russian.normalizeYo(),
         english = english.trimArticle(),
         isLearned = isLearned,
         totalShows = totalShows,
@@ -125,5 +125,12 @@ class WordRepository @Inject constructor(
      */
     private fun String.trimArticle(): String {
         return this.replace(Regex("^(a |an |the |A |An |The )"), "")
+    }
+
+    /**
+     * Нормализует ё → е для хранения в БД
+     */
+    private fun String.normalizeYo(): String {
+        return this.replace('ё', 'е').replace('Ё', 'Е')
     }
 }
