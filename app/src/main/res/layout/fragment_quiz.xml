@@ -35,7 +35,6 @@
         android:text="Балерино Капучино"
         android:textSize="16sp"
         android:textColor="@color/coffee_dark"
-        android:fontFamily="@font/nunito"
         app:layout_constraintTop_toBottomOf="@id/cardCharacter"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,7 +61,6 @@
             android:textSize="24sp"
             android:textStyle="bold"
             android:textColor="@color/coffee_dark"
-            android:fontFamily="@font/nunito_bold"
             android:gravity="center"
             android:padding="20dp" />
     </com.google.android.material.card.MaterialCardView>
@@ -88,7 +86,6 @@
             app:cornerRadius="16dp"
             android:backgroundTint="@color/pastel_green"
             android:textColor="@color/coffee_dark"
-            android:fontFamily="@font/nunito"
             android:layout_marginBottom="8dp" />
 
         <com.google.android.material.button.MaterialButton
@@ -100,7 +97,6 @@
             app:cornerRadius="16dp"
             android:backgroundTint="@color/pastel_pink"
             android:textColor="@color/coffee_dark"
-            android:fontFamily="@font/nunito"
             android:layout_marginBottom="8dp" />
 
         <com.google.android.material.button.MaterialButton
@@ -112,7 +108,6 @@
             app:cornerRadius="16dp"
             android:backgroundTint="@color/pastel_blue"
             android:textColor="@color/coffee_dark"
-            android:fontFamily="@font/nunito"
             android:layout_marginBottom="8dp" />
 
         <com.google.android.material.button.MaterialButton
@@ -123,8 +118,7 @@
             android:textSize="18sp"
             app:cornerRadius="16dp"
             android:backgroundTint="@color/pastel_yellow"
-            android:textColor="@color/coffee_dark"
-            android:fontFamily="@font/nunito" />
+            android:textColor="@color/coffee_dark" />
     </LinearLayout>
 
     <!-- Поле ввода (для уровней 2 и 3) -->
@@ -144,8 +138,7 @@
             android:id="@+id/etAnswer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:fontFamily="@font/nunito" />
+            android:textSize="20sp"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
@@ -157,7 +150,6 @@
         app:cornerRadius="16dp"
         android:backgroundTint="@color/pastel_coffee"
         android:textColor="@color/white"
-        android:fontFamily="@font/nunito_bold"
         app:layout_constraintTop_toBottomOf="@id/tilAnswer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
