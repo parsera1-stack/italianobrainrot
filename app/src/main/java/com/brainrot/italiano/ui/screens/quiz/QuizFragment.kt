@@ -1,10 +1,12 @@
 package com.brainrot.italiano.ui.screens.quiz
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.view.inputmethod.InputMethodManager
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -52,6 +54,7 @@ class QuizFragment : Fragment() {
 
     private fun setupExitButton() {
         binding.btnExit.setOnClickListener {
+            hideKeyboard()
             findNavController().popBackStack()
         }
     }
@@ -105,6 +108,7 @@ class QuizFragment : Fragment() {
         binding.layoutOptions.visibility = View.VISIBLE
         binding.tilAnswer.visibility = View.GONE
         binding.btnSubmit.visibility = View.GONE
+        hideKeyboard()
 
         val buttons = listOf(binding.btnOption1, binding.btnOption2, binding.btnOption3, binding.btnOption4)
         question.options.forEachIndexed { index, option ->
@@ -122,22 +126,32 @@ class QuizFragment : Fragment() {
         binding.tilAnswer.visibility = View.VISIBLE
         binding.btnSubmit.visibility = View.VISIBLE
         binding.etAnswer.text?.clear()
+
+        // Автофокус на поле ввода
+        binding.etAnswer.requestFocus()
+        showKeyboard()
     }
 
     private fun setupInputListeners() {
         binding.btnSubmit.setOnClickListener {
             val answer = binding.etAnswer.text.toString()
             if (answer.isNotBlank()) {
+                hideKeyboard()
                 viewModel.submitAnswer(answer)
             }
         }
     }
 
     private fun showCorrectOverlay(character: Character) {
+        hideKeyboard()
+
+        // Скрываем кнопку "Проверить"
+        binding.btnSubmit.visibility = View.GONE
+
         // Затемняем фон
         overlayBinding.root.visibility = View.VISIBLE
         overlayBinding.root.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.success_green))
-        overlayBinding.root.background.alpha = 220 // ~86% непрозрачности
+        overlayBinding.root.background.alpha = 220
 
         // Большой эмодзи
         overlayBinding.tvOverlayEmoji.text = character.happyEmoji
@@ -163,6 +177,11 @@ class QuizFragment : Fragment() {
     }
 
     private fun showWrongOverlay(character: Character, correctAnswer: String) {
+        hideKeyboard()
+
+        // Скрываем кнопку "Проверить"
+        binding.btnSubmit.visibility = View.GONE
+
         // Затемняем фон красным
         overlayBinding.root.visibility = View.VISIBLE
         overlayBinding.root.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.error_red))
@@ -198,6 +217,7 @@ class QuizFragment : Fragment() {
     }
 
     private fun showFinished() {
+        hideKeyboard()
         hideOverlay()
         binding.tvQuestion.text = "Все слова выучены! 🎉"
         binding.layoutOptions.visibility = View.GONE
@@ -206,8 +226,19 @@ class QuizFragment : Fragment() {
         binding.btnExit.visibility = View.VISIBLE
     }
 
+    private fun showKeyboard() {
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(binding.etAnswer, InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    private fun hideKeyboard() {
+        val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(binding.root.windowToken, 0)
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
+        hideKeyboard()
         _overlayBinding = null
         _binding = null
     }

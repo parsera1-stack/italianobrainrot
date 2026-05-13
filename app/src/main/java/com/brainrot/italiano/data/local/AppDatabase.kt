@@ -55,7 +55,6 @@ abstract class AppDatabase : RoomDatabase() {
 
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
-            // Инициализация стартового словаря при первом запуске
             CoroutineScope(Dispatchers.IO).launch {
                 val database = getDatabase(context)
                 populateDefaultWords(database.defaultWordDao())
