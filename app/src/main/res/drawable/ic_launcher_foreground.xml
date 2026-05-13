@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Тело персонажа (круг) -->
+    <path
+        android:fillColor="#4A3728"
+        android:pathData="M54,30
+                         C54,30 42,35 42,50
+                         C42,60 48,68 54,68
+                         C60,68 66,60 66,50
+                         C66,35 54,30 54,30Z" />
+
+    <!-- Глаза -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M48,48
+                         C48,46 50,44 52,44
+                         C54,44 56,46 56,48
+                         C56,50 54,52 52,52
+                         C50,52 48,50 48,48Z" />
+
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M60,48
+                         C60,46 58,44 56,44
+                         C54,44 52,46 52,48
+                         C52,50 54,52 56,52
+                         C58,52 60,50 60,48Z" />
+
+    <!-- Зрачки -->
+    <path
+        android:fillColor="#4A3728"
+        android:pathData="M52,48
+                         C52,47 53,46 54,46
+                         C55,46 56,47 56,48
+                         C56,49 55,50 54,50
+                         C53,50 52,49 52,48Z" />
+
+    <path
+        android:fillColor="#4A3728"
+        android:pathData="M56,48
+                         C56,47 55,46 54,46
+                         C53,46 52,47 52,48
+                         C52,49 53,50 54,50
+                         C55,50 56,49 56,48Z" />
+
+    <!-- Улыбка -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M48,56
+                         C48,56 54,62 60,56
+                         C60,56 58,58 54,58
+                         C50,58 48,56 48,56Z" />
+
+    <!-- Шляпа/кепка (итальянский стиль) -->
+    <path
+        android:fillColor="#8B4513"
+        android:pathData="M40,38
+                         C40,38 42,30 54,30
+                         C66,30 68,38 68,38
+                         C68,38 66,36 54,36
+                         C42,36 40,38 40,38Z" />
+
+    <!-- Полоска на шляпе -->
+    <path
+        android:fillColor="#228B22"
+        android:pathData="M42,36
+                         C42,36 44,34 54,34
+                         C64,34 66,36 66,36
+                         C66,36 64,35 54,35
+                         C44,35 42,36 42,36Z" />
+
+    <!-- Pizza slice (маленькая в руке) -->
+    <path
+        android:fillColor="#FFA500"
+        android:pathData="M70,55
+                         L75,45
+                         L80,55
+                         C80,55 78,58 75,58
+                         C72,58 70,55 70,55Z" />
+
+    <!-- Точки на пицце (pepperoni) -->
+    <path
+        android:fillColor="#DC143C"
+        android:pathData="M73,52
+                         C73,51 74,50 75,50
+                         C76,50 77,51 77,52
+                         C77,53 76,54 75,54
+                         C74,54 73,53 73,52Z" />
+
+    <path
+        android:fillColor="#DC143C"
+        android:pathData="M76,50
+                         C76,49 77,48 78,48
+                         C79,48 80,49 80,50
+                         C80,51 79,52 78,52
+                         C77,52 76,51 76,50Z" />
+
+</vector>

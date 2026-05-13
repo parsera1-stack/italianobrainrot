@@ -16,4 +16,7 @@
     <!-- Статусные цвета для overlay -->
     <color name="success_green">#4CAF50</color>
     <color name="error_red">#F44336</color>
+
+    <!-- Цвет фона иконки -->
+    <color name="ic_launcher_background">#FFD1DC</color>
 </resources>
