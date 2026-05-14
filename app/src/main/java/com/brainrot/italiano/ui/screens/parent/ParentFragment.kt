@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.brainrot.italiano.R
 import com.brainrot.italiano.databinding.FragmentParentBinding
 import com.brainrot.italiano.ui.viewmodel.ParentViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
