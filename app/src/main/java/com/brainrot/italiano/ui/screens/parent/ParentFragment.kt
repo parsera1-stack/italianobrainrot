@@ -222,8 +222,7 @@ class ParentFragment : Fragment() {
 
         // Детальная статистика по словам
         val detailTitle = TextView(requireContext()).apply {
-            text = "
-📋 По словам:"
+            text = "\n📋 По словам:"
             textSize = 20f
             setTextColor(resources.getColor(R.color.coffee_dark, null))
             setPadding(0, 24, 0, 16)
