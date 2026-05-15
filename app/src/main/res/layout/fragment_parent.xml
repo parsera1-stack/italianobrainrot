@@ -4,19 +4,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cream_background"
-    android:padding="16dp">
+    android:background="@color/cream_background">
 
+    <!-- Верхняя панель с кнопкой назад -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Назад"
+        android:text="← Назад"
         app:cornerRadius="12dp"
         android:backgroundTint="@color/pastel_coffee"
+        android:textColor="@color/white"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="16dp" />
 
+    <!-- Табы -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="0dp"
@@ -24,45 +27,82 @@
         android:background="@color/pastel_coffee"
         app:tabTextColor="@color/coffee_dark"
         app:tabSelectedTextColor="@color/white"
+        app:tabIndicatorColor="@color/white"
         app:layout_constraintTop_toBottomOf="@id/btnBack"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="8dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvWords"
+    <!-- Контент с отступом от табов -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollContent"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/tabLayout"
-        app:layout_constraintBottom_toTopOf="@id/btnImportCsv"
+        app:layout_constraintBottom_toTopOf="@id/bottomPanel"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp" />
+        android:padding="16dp">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnImportCsv"
+        <FrameLayout
+            android:id="@+id/contentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- RecyclerView для слов -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvWords"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible" />
+
+            <!-- Контейнер для статистики -->
+            <LinearLayout
+                android:id="@+id/statsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone" />
+
+        </FrameLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Нижняя панель с кнопками -->
+    <LinearLayout
+        android:id="@+id/bottomPanel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/import_csv"
-        app:cornerRadius="12dp"
-        android:backgroundTint="@color/pastel_green"
-        android:textColor="@color/coffee_dark"
-        app:layout_constraintBottom_toTopOf="@id/btnAddWord"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="8dp" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnAddWord"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/add_word"
-        app:cornerRadius="12dp"
-        android:backgroundTint="@color/pastel_pink"
-        android:textColor="@color/coffee_dark"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:background="@color/cream_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnImportCsv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="📁 CSV"
+            android:textSize="12sp"
+            app:cornerRadius="12dp"
+            android:backgroundTint="@color/pastel_green"
+            android:textColor="@color/coffee_dark"
+            android:layout_marginEnd="8dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnAddWord"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="➕ Слово"
+            android:textSize="12sp"
+            app:cornerRadius="12dp"
+            android:backgroundTint="@color/pastel_pink"
+            android:textColor="@color/coffee_dark" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -79,6 +79,7 @@ class QuizFragment : Fragment() {
     }
 
     private fun showLoading() {
+        binding.contentLayout.visibility = View.VISIBLE
         binding.progressBar.visibility = View.VISIBLE
         binding.layoutOptions.visibility = View.GONE
         binding.tilAnswer.visibility = View.GONE
@@ -87,6 +88,7 @@ class QuizFragment : Fragment() {
     }
 
     private fun showQuestion(question: QuizQuestion, character: Character) {
+        binding.contentLayout.visibility = View.VISIBLE
         binding.progressBar.visibility = View.GONE
         hideOverlay()
 
@@ -145,13 +147,12 @@ class QuizFragment : Fragment() {
     private fun showCorrectOverlay(character: Character) {
         hideKeyboard()
 
-        // Скрываем кнопку "Проверить"
-        binding.btnSubmit.visibility = View.GONE
+        // Скрываем основной контент
+        binding.contentLayout.visibility = View.GONE
 
-        // Затемняем фон
+        // Показываем overlay
         overlayBinding.root.visibility = View.VISIBLE
         overlayBinding.root.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.success_green))
-        overlayBinding.root.background.alpha = 220
 
         // Большой эмодзи
         overlayBinding.tvOverlayEmoji.text = character.happyEmoji
@@ -160,14 +161,14 @@ class QuizFragment : Fragment() {
         overlayBinding.tvOverlayText.text = "Правильно! 🎉"
         overlayBinding.tvOverlayText.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
 
-        // Скрываем правильный ответ (не нужен для правильного)
+        // Скрываем правильный ответ
         overlayBinding.tvOverlayCorrectAnswer.visibility = View.GONE
 
-        // Анимация появления
+        // Анимация
         val anim = AnimationUtils.loadAnimation(requireContext(), R.anim.fade_in)
         overlayBinding.root.startAnimation(anim)
 
-        // Авто-переход через 2 секунды если не нажали "Далее"
+        // Авто-переход через 2 сек
         overlayBinding.root.postDelayed({
             if (isAdded && overlayBinding.root.visibility == View.VISIBLE) {
                 hideOverlay()
@@ -179,15 +180,14 @@ class QuizFragment : Fragment() {
     private fun showWrongOverlay(character: Character, correctAnswer: String) {
         hideKeyboard()
 
-        // Скрываем кнопку "Проверить"
-        binding.btnSubmit.visibility = View.GONE
+        // Скрываем основной контент
+        binding.contentLayout.visibility = View.GONE
 
-        // Затемняем фон красным
+        // Показываем overlay
         overlayBinding.root.visibility = View.VISIBLE
         overlayBinding.root.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.error_red))
-        overlayBinding.root.background.alpha = 220
 
-        // Большой грустный эмодзи
+        // Грустный эмодзи
         overlayBinding.tvOverlayEmoji.text = character.sadEmoji
 
         // Текст
@@ -197,12 +197,13 @@ class QuizFragment : Fragment() {
         // Показываем правильный ответ
         overlayBinding.tvOverlayCorrectAnswer.visibility = View.VISIBLE
         overlayBinding.tvOverlayCorrectAnswer.text = "Правильный ответ: $correctAnswer"
+        overlayBinding.tvOverlayCorrectAnswer.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
 
         // Анимация shake
         val shake = AnimationUtils.loadAnimation(requireContext(), R.anim.shake)
         overlayBinding.tvOverlayEmoji.startAnimation(shake)
 
-        // Авто-переход через 3 секунды
+        // Авто-переход через 3 сек
         overlayBinding.root.postDelayed({
             if (isAdded && overlayBinding.root.visibility == View.VISIBLE) {
                 hideOverlay()
@@ -219,6 +220,7 @@ class QuizFragment : Fragment() {
     private fun showFinished() {
         hideKeyboard()
         hideOverlay()
+        binding.contentLayout.visibility = View.VISIBLE
         binding.tvQuestion.text = "Все слова выучены! 🎉"
         binding.layoutOptions.visibility = View.GONE
         binding.tilAnswer.visibility = View.GONE

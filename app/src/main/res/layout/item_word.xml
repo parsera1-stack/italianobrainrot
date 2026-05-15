@@ -1,57 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="12dp"
-    android:background="@color/white">
+    android:layout_margin="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/white">
 
-    <TextView
-        android:id="@+id/tvRussian"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="русский"
-        android:textSize="16sp"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/cbLearned"
-        android:layout_marginEnd="8dp" />
+        android:padding="16dp">
 
-    <TextView
-        android:id="@+id/tvEnglish"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="english"
-        android:textSize="14sp"
-        android:textColor="@color/coffee_dark"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvRussian"
-        app:layout_constraintEnd_toStartOf="@id/cbLearned"
-        android:layout_marginEnd="8dp" />
+        <TextView
+            android:id="@+id/tvRussian"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="русский"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/layoutActions"
+            android:layout_marginEnd="12dp" />
 
-    <CheckBox
-        android:id="@+id/cbLearned"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Выучено"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@id/btnDelete"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginEnd="8dp" />
+        <TextView
+            android:id="@+id/tvEnglish"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="english"
+            android:textSize="14sp"
+            android:textColor="@color/coffee_dark"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvRussian"
+            app:layout_constraintEnd_toStartOf="@id/layoutActions"
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="4dp" />
 
-    <ImageButton
-        android:id="@+id/btnDelete"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@android:drawable/ic_delete"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:contentDescription="Удалить"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        <LinearLayout
+            android:id="@+id/layoutActions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Выучено"
+                android:textSize="11sp"
+                android:textColor="@color/coffee_dark"
+                android:layout_marginBottom="4dp" />
+
+            <CheckBox
+                android:id="@+id/cbLearned"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false" />
+
+            <ImageButton
+                android:id="@+id/btnDelete"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:src="@android:drawable/ic_menu_delete"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Удалить"
+                android:tint="@color/error_red"
+                android:layout_marginTop="8dp" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

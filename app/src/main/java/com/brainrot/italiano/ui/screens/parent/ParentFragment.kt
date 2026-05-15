@@ -1,6 +1,7 @@
 package com.brainrot.italiano.ui.screens.parent
 
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -20,6 +21,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
+import java.text.SimpleDateFormat
+import java.util.*
 
 @AndroidEntryPoint
 class ParentFragment : Fragment() {
@@ -29,6 +32,8 @@ class ParentFragment : Fragment() {
     private val viewModel: ParentViewModel by viewModels()
 
     private lateinit var wordsAdapter: WordsAdapter
+    private var selectedDate = Date()
+    private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
     private val csvLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -60,7 +65,7 @@ class ParentFragment : Fragment() {
     }
 
     private fun setupTabs() {
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Слова (${viewModel.words.value?.size ?: 0})"))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Слова"))
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Статистика"))
 
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -142,8 +147,6 @@ class ParentFragment : Fragment() {
     private fun observeWords() {
         viewModel.words.observe(viewLifecycleOwner) { words ->
             wordsAdapter.submitList(words)
-            // Обновляем заголовок вкладки
-            binding.tabLayout.getTabAt(0)?.text = "Слова (${words.size})"
         }
     }
 
@@ -162,109 +165,222 @@ class ParentFragment : Fragment() {
 
     private fun showWordsTab() {
         binding.rvWords.visibility = View.VISIBLE
-        // Скрываем статистику если есть
-        val statsView = binding.root.findViewWithTag<View>("stats_view")
-        statsView?.visibility = View.GONE
+        binding.statsContainer.visibility = View.GONE
     }
 
     private fun showStatsTab() {
         binding.rvWords.visibility = View.GONE
+        binding.statsContainer.visibility = View.VISIBLE
+        updateStatsView()
+    }
 
-        // Показываем статистику
+    private fun updateStatsView() {
         val words = viewModel.words.value ?: emptyList()
-        val statsView = binding.root.findViewWithTag<View>("stats_view")
-
-        if (statsView == null) {
-            val newStatsView = createStatsView(words)
-            newStatsView.tag = "stats_view"
-            (binding.root as ViewGroup).addView(newStatsView)
-        } else {
-            statsView.visibility = View.VISIBLE
-            updateStatsView(statsView, words)
-        }
-    }
-
-    private fun createStatsView(words: List<com.brainrot.italiano.domain.model.Word>): View {
-        val scrollView = android.widget.ScrollView(requireContext())
-        val layout = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(32, 32, 32, 32)
-        }
-
-        updateStatsView(layout, words)
-        scrollView.addView(layout)
-        return scrollView
-    }
-
-    private fun updateStatsView(view: View, words: List<com.brainrot.italiano.domain.model.Word>) {
-        val layout = view as? LinearLayout ?: (view as android.widget.ScrollView).getChildAt(0) as LinearLayout
-        layout.removeAllViews()
+        val container = binding.statsContainer
+        container.removeAllViews()
+        container.orientation = LinearLayout.VERTICAL
 
         // Заголовок
         val title = TextView(requireContext()).apply {
             text = "📊 Статистика"
-            textSize = 24f
+            textSize = 28f
             setTextColor(resources.getColor(R.color.coffee_dark, null))
+            setPadding(0, 16, 0, 24)
+        }
+        container.addView(title)
+
+        // Выбор даты
+        val dateRow = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.HORIZONTAL
             setPadding(0, 0, 0, 16)
         }
-        layout.addView(title)
 
-        // Общая статистика
-        val totalWords = words.size
-        val learnedWords = words.count { it.isLearned }
-        val activeWords = totalWords - learnedWords
-
-        addStatLine(layout, "Всего слов:", "$totalWords")
-        addStatLine(layout, "Выучено:", "$learnedWords")
-        addStatLine(layout, "В процессе:", "$activeWords")
-        addStatLine(layout, "Показано вопросов:", "${words.sumOf { it.totalShows }}")
-        addStatLine(layout, "Правильных ответов:", "${words.sumOf { it.totalCorrect }}")
-        addStatLine(layout, "Неправильных ответов:", "${words.sumOf { it.totalWrong }}")
-
-        // Детальная статистика по словам
-        val detailTitle = TextView(requireContext()).apply {
-            text = "\n📋 По словам:"
-            textSize = 20f
-            setTextColor(resources.getColor(R.color.coffee_dark, null))
-            setPadding(0, 24, 0, 16)
-        }
-        layout.addView(detailTitle)
-
-        words.sortedByDescending { it.totalShows }.forEach { word ->
-            val accuracy = if (word.totalShows > 0) {
-                "${(word.totalCorrect * 100 / word.totalShows)}%"
-            } else "0%"
-
-            addStatLine(layout, 
-                "${word.russian} = ${word.english}", 
-                "Показано: ${word.totalShows} | Правильно: ${word.totalCorrect} | Точность: $accuracy",
-                isSmall = true
-            )
-        }
-    }
-
-    private fun addStatLine(layout: LinearLayout, label: String, value: String, isSmall: Boolean = false) {
-        val row = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.HORIZONTAL
-            setPadding(0, 8, 0, 8)
-        }
-
-        val labelView = TextView(requireContext()).apply {
-            text = label
-            textSize = if (isSmall) 14f else 16f
+        val tvDate = TextView(requireContext()).apply {
+            text = "📅 Период: ${dateFormat.format(selectedDate)}"
+            textSize = 16f
             setTextColor(resources.getColor(R.color.black, null))
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         }
 
-        val valueView = TextView(requireContext()).apply {
-            text = value
-            textSize = if (isSmall) 12f else 14f
-            setTextColor(resources.getColor(R.color.coffee_dark, null))
+        val btnPickDate = com.google.android.material.button.MaterialButton(requireContext()).apply {
+            text = "Выбрать дату"
+            textSize = 12f
+            setPadding(16, 8, 16, 8)
+            setOnClickListener {
+                showDatePicker(tvDate)
+            }
         }
 
-        row.addView(labelView)
-        row.addView(valueView)
-        layout.addView(row)
+        dateRow.addView(tvDate)
+        dateRow.addView(btnPickDate)
+        container.addView(dateRow)
+
+        // Последние 3 дня по умолчанию
+        val last3Days = TextView(requireContext()).apply {
+            text = "(по умолчанию: последние 3 дня)"
+            textSize = 12f
+            setTextColor(resources.getColor(R.color.coffee_dark, null))
+            setPadding(0, 0, 0, 24)
+        }
+        container.addView(last3Days)
+
+        // Общая статистика — таблица
+        val totalWords = words.size
+        val learnedWords = words.count { it.isLearned }
+        val activeWords = totalWords - learnedWords
+        val totalShows = words.sumOf { it.totalShows }
+        val totalCorrect = words.sumOf { it.totalCorrect }
+        val totalWrong = words.sumOf { it.totalWrong }
+        val accuracy = if (totalShows > 0) "${(totalCorrect * 100 / totalShows)}%" else "0%"
+
+        addStatsTable(container, listOf(
+            Triple("Всего слов", "$totalWords", ""),
+            Triple("Выучено", "$learnedWords", "✅"),
+            Triple("В процессе", "$activeWords", "📚"),
+            Triple("Показано", "$totalShows", "👁️"),
+            Triple("Правильно", "$totalCorrect", "🎯"),
+            Triple("Неправильно", "$totalWrong", "❌"),
+            Triple("Точность", accuracy, "📈")
+        ))
+
+        // Детальная статистика по словам — таблица
+        val detailTitle = TextView(requireContext()).apply {
+            text = "
+📋 По словам"
+            textSize = 22f
+            setTextColor(resources.getColor(R.color.coffee_dark, null))
+            setPadding(0, 32, 0, 16)
+        }
+        container.addView(detailTitle)
+
+        // Заголовок таблицы
+        addTableHeader(container, listOf("Слово", "Показано", "Правильно", "Точность"))
+
+        words.sortedByDescending { it.totalShows }.forEach { word ->
+            val wordAccuracy = if (word.totalShows > 0) {
+                "${(word.totalCorrect * 100 / word.totalShows)}%"
+            } else "0%"
+
+            addTableRow(container, listOf(
+                "${word.russian}
+${word.english}",
+                "${word.totalShows}",
+                "${word.totalCorrect}",
+                wordAccuracy
+            ))
+        }
+    }
+
+    private fun showDatePicker(tvDate: TextView) {
+        val calendar = Calendar.getInstance()
+        calendar.time = selectedDate
+
+        DatePickerDialog(
+            requireContext(),
+            { _, year, month, day ->
+                calendar.set(year, month, day)
+                selectedDate = calendar.time
+                tvDate.text = "📅 Период: ${dateFormat.format(selectedDate)}"
+                updateStatsView()
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        ).show()
+    }
+
+    private fun addStatsTable(container: LinearLayout, rows: List<Triple<String, String, String>>) {
+        val tableLayout = android.widget.TableLayout(requireContext()).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            setPadding(8, 8, 8, 8)
+        }
+
+        rows.forEach { (label, value, icon) ->
+            val row = android.widget.TableRow(requireContext()).apply {
+                setPadding(8, 12, 8, 12)
+                setBackgroundColor(resources.getColor(R.color.white, null))
+            }
+
+            val labelView = TextView(requireContext()).apply {
+                text = "$icon $label"
+                textSize = 14f
+                setTextColor(resources.getColor(R.color.black, null))
+                layoutParams = android.widget.TableRow.LayoutParams(0, android.widget.TableRow.LayoutParams.WRAP_CONTENT, 2f)
+            }
+
+            val valueView = TextView(requireContext()).apply {
+                text = value
+                textSize = 16f
+                setTextColor(resources.getColor(R.color.coffee_dark, null))
+                textAlignment = TextView.TEXT_ALIGNMENT_TEXT_END
+                layoutParams = android.widget.TableRow.LayoutParams(0, android.widget.TableRow.LayoutParams.WRAP_CONTENT, 1f)
+            }
+
+            row.addView(labelView)
+            row.addView(valueView)
+            tableLayout.addView(row)
+
+            // Разделитель
+            val divider = View(requireContext()).apply {
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    1
+                )
+                setBackgroundColor(resources.getColor(R.color.pastel_coffee, null))
+            }
+            tableLayout.addView(divider)
+        }
+
+        container.addView(tableLayout)
+    }
+
+    private fun addTableHeader(container: LinearLayout, headers: List<String>) {
+        val row = android.widget.TableRow(requireContext()).apply {
+            setPadding(8, 12, 8, 12)
+            setBackgroundColor(resources.getColor(R.color.pastel_coffee, null))
+        }
+
+        headers.forEach { header ->
+            val tv = TextView(requireContext()).apply {
+                text = header
+                textSize = 12f
+                setTextColor(resources.getColor(R.color.white, null))
+                textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+                setPadding(4, 4, 4, 4)
+                layoutParams = android.widget.TableRow.LayoutParams(0, android.widget.TableRow.LayoutParams.WRAP_CONTENT, 1f)
+            }
+            row.addView(tv)
+        }
+
+        val tableLayout = android.widget.TableLayout(requireContext())
+        tableLayout.addView(row)
+        container.addView(tableLayout)
+    }
+
+    private fun addTableRow(container: LinearLayout, cells: List<String>) {
+        val tableLayout = container.getChildAt(container.childCount - 1) as android.widget.TableLayout
+
+        val row = android.widget.TableRow(requireContext()).apply {
+            setPadding(8, 8, 8, 8)
+            setBackgroundColor(resources.getColor(R.color.white, null))
+        }
+
+        cells.forEach { cell ->
+            val tv = TextView(requireContext()).apply {
+                text = cell
+                textSize = 11f
+                setTextColor(resources.getColor(R.color.black, null))
+                textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+                setPadding(4, 4, 4, 4)
+                layoutParams = android.widget.TableRow.LayoutParams(0, android.widget.TableRow.LayoutParams.WRAP_CONTENT, 1f)
+            }
+            row.addView(tv)
+        }
+
+        tableLayout.addView(row)
     }
 
     override fun onDestroyView() {

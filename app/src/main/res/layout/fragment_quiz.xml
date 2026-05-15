@@ -1,199 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cream_background"
-    android:padding="16dp">
+    android:background="@color/cream_background">
 
-    <!-- Кнопка выхода -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnExit"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:text="✕"
-        android:textSize="18sp"
-        app:cornerRadius="24dp"
-        android:backgroundTint="@color/pastel_red"
-        android:textColor="@color/white"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+    <!-- Основной контент (вопрос) -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/contentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp">
 
-    <!-- Персонаж -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardCharacter"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        app:cardCornerRadius="60dp"
-        app:cardBackgroundColor="@color/pastel_pink"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="48dp">
+        <!-- Кнопка выхода -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnExit"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:text="✕"
+            android:textSize="18sp"
+            app:cornerRadius="24dp"
+            android:backgroundTint="@color/pastel_red"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Персонаж -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardCharacter"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            app:cardCornerRadius="60dp"
+            app:cardBackgroundColor="@color/pastel_pink"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="48dp">
+
+            <TextView
+                android:id="@+id/tvCharacterEmoji"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="😐"
+                android:textSize="60sp"
+                android:layout_gravity="center" />
+        </com.google.android.material.card.MaterialCardView>
 
         <TextView
-            android:id="@+id/tvCharacterEmoji"
+            android:id="@+id/tvCharacterName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="😐"
-            android:textSize="60sp"
-            android:layout_gravity="center" />
-    </com.google.android.material.card.MaterialCardView>
-
-    <TextView
-        android:id="@+id/tvCharacterName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Балерино Капучино"
-        android:textSize="16sp"
-        android:textColor="@color/coffee_dark"
-        app:layout_constraintTop_toBottomOf="@id/cardCharacter"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp" />
-
-    <!-- Вопрос -->
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardQuestion"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="20dp"
-        app:cardBackgroundColor="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/tvCharacterName"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp">
-
-        <TextView
-            android:id="@+id/tvQuestion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Как перевести: wolf?"
-            android:textSize="24sp"
-            android:textStyle="bold"
+            android:text="Балерино Капучино"
+            android:textSize="16sp"
             android:textColor="@color/coffee_dark"
-            android:gravity="center"
-            android:padding="20dp" />
-    </com.google.android.material.card.MaterialCardView>
+            app:layout_constraintTop_toBottomOf="@id/cardCharacter"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="8dp" />
 
-    <!-- Варианты ответа (уровень 1) -->
-    <LinearLayout
-        android:id="@+id/layoutOptions"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/cardQuestion"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"
-        android:visibility="gone">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnOption1"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="волк"
-            android:textSize="18sp"
-            android:textColor="@color/black"
-            app:cornerRadius="16dp"
-            android:backgroundTint="@color/pastel_green"
-            android:fontFamily="sans-serif"
-            android:layout_marginBottom="8dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnOption2"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="осёл"
-            android:textSize="18sp"
-            android:textColor="@color/black"
-            app:cornerRadius="16dp"
-            android:backgroundTint="@color/pastel_pink"
-            android:fontFamily="sans-serif"
-            android:layout_marginBottom="8dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnOption3"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="обезьяна"
-            android:textSize="18sp"
-            android:textColor="@color/black"
-            app:cornerRadius="16dp"
-            android:backgroundTint="@color/pastel_blue"
-            android:fontFamily="sans-serif"
-            android:layout_marginBottom="8dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnOption4"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="герой"
-            android:textSize="18sp"
-            android:textColor="@color/black"
-            app:cornerRadius="16dp"
-            android:backgroundTint="@color/pastel_yellow"
-            android:fontFamily="sans-serif" />
-    </LinearLayout>
-
-    <!-- Поле ввода (уровни 2 и 3) -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilAnswer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="@string/enter_answer"
-        app:layout_constraintTop_toBottomOf="@id/cardQuestion"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="24dp"
-        android:visibility="gone"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etAnswer"
-            android:layout_width="match_parent"
+        <!-- Вопрос -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardQuestion"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/black"
-            android:fontFamily="sans-serif" />
-    </com.google.android.material.textfield.TextInputLayout>
+            app:cardCornerRadius="20dp"
+            app:cardBackgroundColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/tvCharacterName"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="24dp">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSubmit"
-        android:layout_width="0dp"
-        android:layout_height="60dp"
-        android:text="@string/check"
-        android:textSize="18sp"
-        app:cornerRadius="16dp"
-        android:backgroundTint="@color/pastel_coffee"
-        android:textColor="@color/white"
-        android:fontFamily="sans-serif"
-        app:layout_constraintTop_toBottomOf="@id/tilAnswer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="16dp"
-        android:visibility="gone" />
+            <TextView
+                android:id="@+id/tvQuestion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Как перевести: wolf?"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/coffee_dark"
+                android:gravity="center"
+                android:padding="20dp" />
+        </com.google.android.material.card.MaterialCardView>
 
-    <!-- Overlay реакции (затемнение + текст по центру) -->
+        <!-- Варианты ответа (уровень 1) -->
+        <LinearLayout
+            android:id="@+id/layoutOptions"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/cardQuestion"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="24dp"
+            android:visibility="gone">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOption1"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="волк"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                app:cornerRadius="16dp"
+                android:backgroundTint="@color/pastel_green"
+                android:layout_marginBottom="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOption2"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="осёл"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                app:cornerRadius="16dp"
+                android:backgroundTint="@color/pastel_pink"
+                android:layout_marginBottom="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOption3"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="обезьяна"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                app:cornerRadius="16dp"
+                android:backgroundTint="@color/pastel_blue"
+                android:layout_marginBottom="8dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnOption4"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="герой"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                app:cornerRadius="16dp"
+                android:backgroundTint="@color/pastel_yellow" />
+        </LinearLayout>
+
+        <!-- Поле ввода (уровни 2 и 3) -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilAnswer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Введите ответ"
+            app:layout_constraintTop_toBottomOf="@id/cardQuestion"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="24dp"
+            android:visibility="gone"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etAnswer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/black" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSubmit"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:text="Проверить"
+            android:textSize="18sp"
+            app:cornerRadius="16dp"
+            android:backgroundTint="@color/pastel_coffee"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/tilAnswer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"
+            android:visibility="gone" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Overlay результата (поверх всего) -->
     <include
         android:id="@+id/overlayFeedback"
         layout="@layout/overlay_feedback"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_height="match_parent" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_gravity="center"
         android:visibility="gone" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
