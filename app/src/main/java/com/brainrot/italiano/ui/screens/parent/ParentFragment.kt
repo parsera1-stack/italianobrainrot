@@ -245,8 +245,7 @@ class ParentFragment : Fragment() {
 
         // Детальная статистика по словам — таблица
         val detailTitle = TextView(requireContext()).apply {
-            text = "
-📋 По словам"
+            text = "\n📋 По словам"
             textSize = 22f
             setTextColor(resources.getColor(R.color.coffee_dark, null))
             setPadding(0, 32, 0, 16)
@@ -262,8 +261,7 @@ class ParentFragment : Fragment() {
             } else "0%"
 
             addTableRow(container, listOf(
-                "${word.russian}
-${word.english}",
+                "${word.russian}\n${word.english}",
                 "${word.totalShows}",
                 "${word.totalCorrect}",
                 wordAccuracy
