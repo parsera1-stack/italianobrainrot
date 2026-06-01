@@ -13,28 +13,29 @@ import java.io.OutputStreamWriter
 import javax.inject.Inject
 
 /**
- * UseCase для единого импорта/экспорта слов и статистики в CSV
- * Формат: russian,english,isLearned,totalShows,totalCorrect,totalWrong
+ * UseCase for unified import/export of words and statistics to CSV
+ * Format: russian,english,isLearned,totalShows,totalCorrect,totalWrong
  */
 class UnifiedImportExportUseCase @Inject constructor(
     private val repository: WordRepository
 ) {
 
     /**
-     * Экспорт всех слов со статистикой в CSV
+     * Export all words with statistics to CSV
      */
     suspend fun exportToCsv(context: Context, uri: Uri): Result<Int> = withContext(Dispatchers.IO) {
         try {
             val words = repository.getAllWords().first()
 
             val outputStream = context.contentResolver.openOutputStream(uri)
-                ?: return@withContext Result.failure(Exception("Не удалось создать файл"))
+                ?: return@withContext Result.failure(Exception("Cannot create file"))
 
             OutputStreamWriter(outputStream, Charsets.UTF_8).use { writer ->
-                // Заголовок
-                writer.write("russian,english,isLearned,totalShows,totalCorrect,totalWrong\n")
+                // Header
+                writer.write("russian,english,isLearned,totalShows,totalCorrect,totalWrong")
+                writer.write(System.lineSeparator())
 
-                // Данные
+                // Data
                 words.forEach { word ->
                     val entity = WordEntity(
                         id = word.id,
@@ -48,7 +49,8 @@ class UnifiedImportExportUseCase @Inject constructor(
                         lastShownTimestamp = word.lastShownTimestamp,
                         lastResultCorrect = word.lastResultCorrect
                     )
-                    writer.write(entity.toCsvLine() + "\n")
+                    writer.write(entity.toCsvLine())
+                    writer.write(System.lineSeparator())
                 }
             }
 
@@ -59,13 +61,13 @@ class UnifiedImportExportUseCase @Inject constructor(
     }
 
     /**
-     * Импорт слов со статистикой из CSV
-     * Перезаписывает существующие слова или добавляет новые
+     * Import words with statistics from CSV
+     * Overwrites existing words or adds new ones
      */
     suspend fun importFromCsv(context: Context, uri: Uri): Result<ImportResult> = withContext(Dispatchers.IO) {
         try {
             val inputStream = context.contentResolver.openInputStream(uri)
-                ?: return@withContext Result.failure(Exception("Не удалось открыть файл"))
+                ?: return@withContext Result.failure(Exception("Cannot open file"))
 
             val reader = BufferedReader(InputStreamReader(inputStream, Charsets.UTF_8))
             var imported = 0
@@ -75,21 +77,21 @@ class UnifiedImportExportUseCase @Inject constructor(
             reader.useLines { lines ->
                 lines.forEachIndexed { index, line ->
                     if (index == 0 && line.lowercase().contains("russian")) {
-                        // Пропускаем заголовок
+                        // Skip header
                         return@forEachIndexed
                     }
                     if (line.isBlank()) return@forEachIndexed
 
                     val entity = WordEntity.fromCsvLine(line)
                     if (entity != null) {
-                        // Проверяем, есть ли уже такое слово
+                        // Check if word already exists
                         val existingWords = repository.getAllWords().first()
                         val existing = existingWords.find { 
                             it.russian == entity.russian && it.english == entity.english 
                         }
 
                         if (existing != null) {
-                            // Обновляем статистику
+                            // Update statistics
                             repository.updateWord(existing.copy(
                                 isLearned = entity.isLearned,
                                 totalShows = entity.totalShows,
@@ -98,7 +100,7 @@ class UnifiedImportExportUseCase @Inject constructor(
                             ))
                             updated++
                         } else {
-                            // Добавляем новое
+                            // Add new word
                             repository.addWord(com.brainrot.italiano.domain.model.Word(
                                 russian = entity.russian,
                                 english = entity.english,
@@ -127,7 +129,7 @@ class UnifiedImportExportUseCase @Inject constructor(
         val skipped: Int
     ) {
         override fun toString(): String {
-            return "Добавлено: $imported, Обновлено: $updated, Пропущено: $skipped"
+            return "Added: $imported, Updated: $updated, Skipped: $skipped"
         }
     }
 }
