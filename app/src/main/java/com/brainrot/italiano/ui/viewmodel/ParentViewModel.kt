@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.brainrot.italiano.domain.model.Word
-import com.brainrot.italiano.domain.usecase.ImportWordsFromCsvUseCase
+import com.brainrot.italiano.domain.usecase.UnifiedImportExportUseCase
 import com.brainrot.italiano.data.repository.WordRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -17,14 +17,14 @@ import javax.inject.Inject
 @HiltViewModel
 class ParentViewModel @Inject constructor(
     private val repository: WordRepository,
-    private val importCsv: ImportWordsFromCsvUseCase
+    private val unifiedImportExport: UnifiedImportExportUseCase
 ) : ViewModel() {
 
     private val _words = MutableLiveData<List<Word>>()
     val words: LiveData<List<Word>> = _words
 
-    private val _importResult = MutableLiveData<Result<Int>?>()
-    val importResult: LiveData<Result<Int>?> = _importResult
+    private val _operationResult = MutableLiveData<String?>()
+    val operationResult: LiveData<String?> = _operationResult
 
     private val _pinValidated = MutableLiveData<Boolean>()
     val pinValidated: LiveData<Boolean> = _pinValidated
@@ -70,14 +70,35 @@ class ParentViewModel @Inject constructor(
         }
     }
 
-    fun importFromCsv(context: Context, uri: Uri) {
+    /**
+     * Экспорт слов и статистики в CSV
+     */
+    fun exportToCsv(context: Context, uri: Uri) {
         viewModelScope.launch {
-            val result = importCsv(context, uri)
-            _importResult.value = result
+            val result = unifiedImportExport.exportToCsv(context, uri)
+            result.onSuccess { count ->
+                _operationResult.value = "Экспортировано $count слов"
+            }.onFailure { error ->
+                _operationResult.value = "Ошибка экспорта: ${error.message}"
+            }
         }
     }
 
-    fun clearImportResult() {
-        _importResult.value = null
+    /**
+     * Импорт слов и статистики из CSV
+     */
+    fun importFromCsv(context: Context, uri: Uri) {
+        viewModelScope.launch {
+            val result = unifiedImportExport.importFromCsv(context, uri)
+            result.onSuccess { importResult ->
+                _operationResult.value = "Импорт: $importResult"
+            }.onFailure { error ->
+                _operationResult.value = "Ошибка импорта: ${error.message}"
+            }
+        }
+    }
+
+    fun clearOperationResult() {
+        _operationResult.value = null
     }
 }

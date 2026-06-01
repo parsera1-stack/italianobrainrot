@@ -35,12 +35,24 @@ class ParentFragment : Fragment() {
     private var selectedDate = Date()
     private val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
-    private val csvLauncher = registerForActivityResult(
+    // Лаунчер для импорта CSV
+    private val importLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
             result.data?.data?.let { uri ->
                 viewModel.importFromCsv(requireContext(), uri)
+            }
+        }
+    }
+
+    // Лаунчер для экспорта CSV
+    private val exportLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.data?.let { uri ->
+                viewModel.exportToCsv(requireContext(), uri)
             }
         }
     }
@@ -61,7 +73,7 @@ class ParentFragment : Fragment() {
         setupRecyclerView()
         setupClickListeners()
         observeWords()
-        observeImportResult()
+        observeOperationResult()
     }
 
     private fun setupTabs() {
@@ -95,13 +107,9 @@ class ParentFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
+        // Кнопка Импорт/Экспорт — показываем диалог выбора действия
         binding.btnImportCsv.setOnClickListener {
-            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-                addCategory(Intent.CATEGORY_OPENABLE)
-                type = "*/*"
-                putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("text/csv", "text/comma-separated-values", "text/plain"))
-            }
-            csvLauncher.launch(intent)
+            showImportExportDialog()
         }
 
         binding.btnAddWord.setOnClickListener {
@@ -111,6 +119,39 @@ class ParentFragment : Fragment() {
         binding.btnBack.setOnClickListener {
             findNavController().popBackStack()
         }
+    }
+
+    private fun showImportExportDialog() {
+        val options = arrayOf("📥 Импорт (загрузить CSV)", "📤 Экспорт (сохранить CSV)")
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Импорт / Экспорт")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> startImport()
+                    1 -> startExport()
+                }
+            }
+            .setNegativeButton("Отмена", null)
+            .show()
+    }
+
+    private fun startImport() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "*/*"
+            putExtra(Intent.EXTRA_MIME_TYPES, arrayOf("text/csv", "text/comma-separated-values", "text/plain"))
+        }
+        importLauncher.launch(intent)
+    }
+
+    private fun startExport() {
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "text/csv"
+            putExtra(Intent.EXTRA_TITLE, "italiano_brain_rot_backup_${System.currentTimeMillis()}.csv")
+        }
+        exportLauncher.launch(intent)
     }
 
     private fun showAddWordDialog() {
@@ -150,15 +191,11 @@ class ParentFragment : Fragment() {
         }
     }
 
-    private fun observeImportResult() {
-        viewModel.importResult.observe(viewLifecycleOwner) { result ->
+    private fun observeOperationResult() {
+        viewModel.operationResult.observe(viewLifecycleOwner) { result ->
             result?.let {
-                it.onSuccess { count ->
-                    Snackbar.make(binding.root, "Загружено $count слов", Snackbar.LENGTH_LONG).show()
-                }.onFailure { error ->
-                    Snackbar.make(binding.root, "Ошибка: ${error.message}", Snackbar.LENGTH_LONG).show()
-                }
-                viewModel.clearImportResult()
+                Snackbar.make(binding.root, it, Snackbar.LENGTH_LONG).show()
+                viewModel.clearOperationResult()
             }
         }
     }
@@ -224,7 +261,7 @@ class ParentFragment : Fragment() {
         }
         container.addView(last3Days)
 
-        // Общая статистика — таблица
+        // Общая статистика
         val totalWords = words.size
         val learnedWords = words.count { it.isLearned }
         val activeWords = totalWords - learnedWords
@@ -243,7 +280,7 @@ class ParentFragment : Fragment() {
             Triple("Точность", accuracy, "📈")
         ))
 
-        // Детальная статистика по словам — таблица
+        // Детальная статистика по словам
         val detailTitle = TextView(requireContext()).apply {
             text = "\n📋 По словам"
             textSize = 22f

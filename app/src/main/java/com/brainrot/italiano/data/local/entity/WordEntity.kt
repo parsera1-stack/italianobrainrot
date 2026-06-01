@@ -19,4 +19,30 @@ data class WordEntity(
     val consecutiveWrong: Int = 0,
     val lastShownTimestamp: Long = 0,
     val lastResultCorrect: Boolean = true
-)
+) {
+    /**
+     * Формат CSV: russian,english,isLearned,totalShows,totalCorrect,totalWrong
+     */
+    fun toCsvLine(): String {
+        return "$russian,$english,${if (isLearned) 1 else 0},$totalShows,$totalCorrect,$totalWrong"
+    }
+
+    companion object {
+        fun fromCsvLine(line: String): WordEntity? {
+            val parts = line.split(",")
+            if (parts.size < 2) return null
+            return WordEntity(
+                russian = parts[0].trim(),
+                english = parts[1].trim().trimArticle(),
+                isLearned = parts.getOrNull(2)?.trim() == "1",
+                totalShows = parts.getOrNull(3)?.trim()?.toIntOrNull() ?: 0,
+                totalCorrect = parts.getOrNull(4)?.trim()?.toIntOrNull() ?: 0,
+                totalWrong = parts.getOrNull(5)?.trim()?.toIntOrNull() ?: 0
+            )
+        }
+
+        private fun String.trimArticle(): String {
+            return this.replace(Regex("^(a |an |the |A |An |The )"), "")
+        }
+    }
+}
