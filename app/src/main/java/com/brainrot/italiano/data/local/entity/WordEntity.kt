@@ -25,19 +25,18 @@ data class WordEntity(
      * Запятые внутри значений экранируются кавычками
      */
     fun toCsvLine(): String {
-        val rus = russian.escapeCsv()
-        val eng = english.escapeCsv()
+        val rus = escapeCsv(russian)
+        val eng = escapeCsv(english)
         return "$rus,$eng,${if (isLearned) 1 else 0},$totalShows,$totalCorrect,$totalWrong"
     }
 
     companion object {
         fun fromCsvLine(line: String): WordEntity? {
-            // Парсим CSV с учётом кавычек
             val parts = parseCsvLine(line)
             if (parts.size < 2) return null
             return WordEntity(
-                russian = parts[0].trim().unescapeCsv(),
-                english = parts[1].trim().unescapeCsv().trimArticle(),
+                russian = unescapeCsv(parts[0].trim()),
+                english = unescapeCsv(parts[1].trim()).trimArticle(),
                 isLearned = parts.getOrNull(2)?.trim() == "1",
                 totalShows = parts.getOrNull(3)?.trim()?.toIntOrNull() ?: 0,
                 totalCorrect = parts.getOrNull(4)?.trim()?.toIntOrNull() ?: 0,
@@ -45,9 +44,25 @@ data class WordEntity(
             )
         }
 
+        private fun escapeCsv(value: String): String {
+            return if (value.contains(",") || value.contains(""") || value.contains("
+")) {
+                """ + value.replace(""", """") + """
+            } else {
+                value
+            }
+        }
+
+        private fun unescapeCsv(value: String): String {
+            return if (value.startsWith(""") && value.endsWith(""")) {
+                value.substring(1, value.length - 1).replace("""", """)
+            } else {
+                value
+            }
+        }
+
         /**
-         * Парсит CSV-строку с учётом кавычек
-         * "тарелка, блюдо",dish,0,0,0,0 → [тарелка, блюдо, dish, 0, 0, 0, 0]
+         * Парсит CSV-строку с учетом кавычек
          */
         private fun parseCsvLine(line: String): List<String> {
             val result = mutableListOf<String>()
@@ -72,23 +87,6 @@ data class WordEntity(
             }
             result.add(current.toString())
             return result
-        }
-
-        private fun String.escapeCsv(): String {
-            return if (this.contains(",") || this.contains(""") || this.contains("
-")) {
-                """ + this.replace(""", """") + """
-            } else {
-                this
-            }
-        }
-
-        private fun String.unescapeCsv(): String {
-            return if (this.startsWith(""") && this.endsWith(""")) {
-                this.substring(1, this.length - 1).replace("""", """)
-            } else {
-                this
-            }
         }
 
         private fun String.trimArticle(): String {
