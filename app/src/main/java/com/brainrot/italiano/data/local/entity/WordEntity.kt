@@ -45,17 +45,16 @@ data class WordEntity(
         }
 
         private fun escapeCsv(value: String): String {
-            return if (value.contains(",") || value.contains(""") || value.contains("
-")) {
-                """ + value.replace(""", """") + """
+            return if (value.contains(",") || value.contains("\"") || value.contains("\n")) {
+                "\"" + value.replace("\"", "\"\"") + "\""
             } else {
                 value
             }
         }
 
         private fun unescapeCsv(value: String): String {
-            return if (value.startsWith(""") && value.endsWith(""")) {
-                value.substring(1, value.length - 1).replace("""", """)
+            return if (value.startsWith("\"") && value.endsWith("\"")) {
+                value.substring(1, value.length - 1).replace("\"\"", "\"")
             } else {
                 value
             }
