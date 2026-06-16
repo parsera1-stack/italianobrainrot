@@ -37,14 +37,11 @@ class WordsAdapter(
             tvRussian.text = word.russian
             tvEnglish.text = word.english
 
-            // Сначала сбрасываем слушатель
+            // Сначала сбрасываем слушатель, потом меняем состояние
             cbLearned.setOnCheckedChangeListener(null)
-            // Устанавливаем состояние БЕЗ вызова слушателя
             cbLearned.isChecked = word.isLearned
 
-            // Теперь вешаем слушатель
             cbLearned.setOnCheckedChangeListener { _, isChecked ->
-                // Проверяем, что состояние действительно изменилось (защита от ложных срабатываний)
                 if (word.isLearned != isChecked) {
                     onToggleLearned(word.copy(isLearned = isChecked))
                 }
