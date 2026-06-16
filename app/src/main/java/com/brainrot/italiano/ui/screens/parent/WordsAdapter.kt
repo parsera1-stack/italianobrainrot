@@ -43,6 +43,9 @@ class WordsAdapter(
         fun bind(word: Word) {
             tvRussian.text = word.russian
             tvEnglish.text = word.english
+
+            // ВАЖНО: сначала сбрасываем слушатель, потом меняем состояние!
+            cbLearned.setOnCheckedChangeListener(null)
             cbLearned.isChecked = word.isLearned
 
             cbLearned.setOnCheckedChangeListener { _, isChecked ->
