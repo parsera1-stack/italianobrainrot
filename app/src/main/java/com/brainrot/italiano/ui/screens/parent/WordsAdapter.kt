@@ -6,6 +6,8 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.brainrot.italiano.R
 import com.brainrot.italiano.domain.model.Word
@@ -13,14 +15,7 @@ import com.brainrot.italiano.domain.model.Word
 class WordsAdapter(
     private val onDelete: (Word) -> Unit,
     private val onToggleLearned: (Word) -> Unit
-) : RecyclerView.Adapter<WordsAdapter.WordViewHolder>() {
-
-    private var words = listOf<Word>()
-
-    fun submitList(newWords: List<Word>) {
-        words = newWords
-        notifyDataSetChanged()
-    }
+) : ListAdapter<Word, WordsAdapter.WordViewHolder>(WordDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -29,10 +24,8 @@ class WordsAdapter(
     }
 
     override fun onBindViewHolder(holder: WordViewHolder, position: Int) {
-        holder.bind(words[position])
+        holder.bind(getItem(position))
     }
-
-    override fun getItemCount() = words.size
 
     inner class WordViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvRussian: TextView = itemView.findViewById(R.id.tvRussian)
@@ -44,17 +37,32 @@ class WordsAdapter(
             tvRussian.text = word.russian
             tvEnglish.text = word.english
 
-            // ВАЖНО: сначала сбрасываем слушатель, потом меняем состояние!
+            // Сначала сбрасываем слушатель
             cbLearned.setOnCheckedChangeListener(null)
+            // Устанавливаем состояние БЕЗ вызова слушателя
             cbLearned.isChecked = word.isLearned
 
+            // Теперь вешаем слушатель
             cbLearned.setOnCheckedChangeListener { _, isChecked ->
-                onToggleLearned(word.copy(isLearned = isChecked))
+                // Проверяем, что состояние действительно изменилось (защита от ложных срабатываний)
+                if (word.isLearned != isChecked) {
+                    onToggleLearned(word.copy(isLearned = isChecked))
+                }
             }
 
             btnDelete.setOnClickListener {
                 onDelete(word)
             }
+        }
+    }
+
+    class WordDiffCallback : DiffUtil.ItemCallback<Word>() {
+        override fun areItemsTheSame(oldItem: Word, newItem: Word): Boolean {
+            return oldItem.id == newItem.id
+        }
+
+        override fun areContentsTheSame(oldItem: Word, newItem: Word): Boolean {
+            return oldItem == newItem
         }
     }
 }
