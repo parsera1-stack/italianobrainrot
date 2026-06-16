@@ -66,7 +66,7 @@ class ParentViewModel @Inject constructor(
 
     fun toggleLearned(word: Word) {
         viewModelScope.launch {
-            repository.updateWord(word.copy(isLearned = !word.isLearned))
+            repository.updateWord(word)
         }
     }
 
