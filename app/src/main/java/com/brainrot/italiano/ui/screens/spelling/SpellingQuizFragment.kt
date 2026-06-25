@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -50,7 +49,7 @@ class SpellingQuizFragment : Fragment() {
     private fun observeQuestion() {
         viewModel.currentQuestion.observe(viewLifecycleOwner) { question ->
             question?.let {
-                binding.tvRussianWord.text = it.russianWord
+                binding.tvRussianWord.text = it.questionText
                 binding.tvQuestionNumber.text = "Вопрос ${viewModel.totalQuestions.value ?: 1}"
 
                 setupOptions(it.options, it.correctAnswer)
@@ -112,12 +111,12 @@ class SpellingQuizFragment : Fragment() {
             when {
                 btn.text.toString() == correctAnswer -> {
                     btn.setBackgroundColor(
-                        ContextCompat.getColor(requireContext(), R.color.green_correct)
+                        ContextCompat.getColor(requireContext(), R.color.success_green)
                     )
                 }
                 !isCorrect && btn.isPressed -> {
                     btn.setBackgroundColor(
-                        ContextCompat.getColor(requireContext(), R.color.red_wrong)
+                        ContextCompat.getColor(requireContext(), R.color.error_red)
                     )
                 }
             }
