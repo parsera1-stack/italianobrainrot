@@ -68,6 +68,21 @@ class WordRepository @Inject constructor(
         return wordDao.getRandomActiveWords(limit).map { it.toDomain() }
     }
 
+    /**
+     * Получает слова с приоритетом по статистике показов.
+     * Слова с меньшим количеством показов показываются чаще.
+     */
+    suspend fun getRandomActiveWordsByPriority(limit: Int): List<Word> {
+        return wordDao.getRandomActiveWordsByPriority(limit).map { it.toDomain() }
+    }
+
+    /**
+     * Получает дистракторы с приоритетом по статистике показов.
+     */
+    suspend fun getRandomDistractorsByPriority(excludeId: Long, limit: Int): List<Word> {
+        return wordDao.getRandomDistractorsByPriority(excludeId, limit).map { it.toDomain() }
+    }
+
     suspend fun recordAnswer(wordId: Long, isCorrect: Boolean, level: Int) {
         val word = wordDao.getWordById(wordId) ?: return
 
