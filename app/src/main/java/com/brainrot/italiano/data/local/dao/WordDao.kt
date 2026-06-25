@@ -34,6 +34,12 @@ interface WordDao {
     @Query("SELECT COUNT(*) FROM words")
     suspend fun getWordsCount(): Int
 
+    @Query("SELECT * FROM words WHERE isLearned = 0 ORDER BY totalShows ASC, RANDOM() LIMIT :limit")
+    suspend fun getRandomActiveWordsByPriority(limit: Int): List<WordEntity>
+
+    @Query("SELECT * FROM words WHERE isLearned = 0 AND id != :excludeId ORDER BY totalShows ASC, RANDOM() LIMIT :limit")
+    suspend fun getRandomDistractorsByPriority(excludeId: Long, limit: Int): List<WordEntity>
+
     @Query("SELECT * FROM words WHERE isLearned = 0 ORDER BY RANDOM() LIMIT :limit")
     suspend fun getRandomActiveWords(limit: Int): List<WordEntity>
 
