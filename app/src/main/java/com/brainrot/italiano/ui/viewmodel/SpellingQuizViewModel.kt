@@ -5,18 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.brainrot.italiano.domain.model.QuizQuestion
-import com.brainrot.italiano.domain.usecase.CheckAnswerUseCase
 import com.brainrot.italiano.domain.usecase.GenerateSpellingQuestionUseCase
-import com.brainrot.italiano.domain.usecase.GetNextWordUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SpellingQuizViewModel @Inject constructor(
-    private val generateQuestion: GenerateSpellingQuestionUseCase,
-    private val checkAnswer: CheckAnswerUseCase,
-    private val getNextWord: GetNextWordUseCase
+    private val generateQuestion: GenerateSpellingQuestionUseCase
 ) : ViewModel() {
 
     private val _currentQuestion = MutableLiveData<QuizQuestion?>()
@@ -67,7 +63,7 @@ class SpellingQuizViewModel @Inject constructor(
         _feedback.value = Feedback.Answer(
             isCorrect = isCorrect,
             correctAnswer = question.correctAnswer,
-            russianWord = question.russianWord
+            russianWord = question.questionText
         )
     }
 
@@ -81,8 +77,8 @@ class SpellingQuizViewModel @Inject constructor(
     private fun normalizeAnswer(answer: String): String {
         return answer
             .lowercase()
-            .replace("\s+".toRegex(), "")
-            .replace("^(a|an|the)".toRegex(), "")
+            .replace(Regex("\s+"), "")
+            .replace(Regex("^(a|an|the)"), "")
     }
 
     sealed class Feedback {
