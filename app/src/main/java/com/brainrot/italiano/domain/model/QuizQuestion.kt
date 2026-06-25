@@ -20,5 +20,6 @@ enum class QuestionDirection {
 enum class QuestionType {
     MULTIPLE_CHOICE,    // Уровень 1 - выбор из 4 вариантов
     WRITTEN,           // Уровень 2 - письменный ввод
-    MIXED              // Уровень 3 - смешанный
+    MIXED,        // 3-й уровень: аудирование
+    SPELLING             // Уровень 3 - смешанный
 }
