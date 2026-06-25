@@ -46,6 +46,9 @@ class HomeFragment : Fragment() {
         binding.cardLevel3.setOnClickListener {
             navigateToQuiz(3)
         }
+        binding.btnLevel4.setOnClickListener {
+        findNavController().navigate(R.id.action_homeFragment_to_spellingQuizFragment)
+        }
         binding.btnParent.setOnClickListener {
             showPinDialog()
         }
@@ -88,4 +91,6 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    
 }
