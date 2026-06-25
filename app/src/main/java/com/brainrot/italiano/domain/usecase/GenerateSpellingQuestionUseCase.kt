@@ -2,19 +2,22 @@ package com.brainrot.italiano.domain.usecase
 
 import com.brainrot.italiano.data.repository.WordRepository
 import com.brainrot.italiano.domain.model.QuizQuestion
-import com.brainrot.italiano.domain.model.Word
+import com.brainrot.italiano.domain.model.QuestionDirection
+import com.brainrot.italiano.domain.model.QuestionType
 import javax.inject.Inject
 
 /**
  * Генерация вопроса для теста орфографии (4-й уровень)
  * Дистракторы — орфографические ошибки
+ * Приоритет: слова с меньшим количеством показов показываются чаще
  */
 class GenerateSpellingQuestionUseCase @Inject constructor(
     private val repository: WordRepository
 ) {
 
     suspend operator fun invoke(): Result<QuizQuestion> {
-        val words = repository.getRandomActiveWords(1)
+        // Используем приоритет по статистике показов
+        val words = repository.getRandomActiveWordsByPriority(1)
         if (words.isEmpty()) {
             return Result.failure(Exception("Нет доступных слов"))
         }
@@ -30,11 +33,12 @@ class GenerateSpellingQuestionUseCase @Inject constructor(
 
         return Result.success(
             QuizQuestion(
-                wordId = word.id,
-                russianWord = word.russian,
+                word = word,
+                questionText = word.russian,
                 correctAnswer = correctAnswer,
                 options = options,
-                quizType = QuizQuestion.QuizType.SPELLING
+                questionDirection = QuestionDirection.RUSSIAN_TO_ENGLISH,
+                questionType = QuestionType.SPELLING
             )
         )
     }
