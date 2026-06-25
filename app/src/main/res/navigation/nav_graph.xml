@@ -41,5 +41,10 @@
         android:name="com.brainrot.italiano.ui.screens.parent.ParentFragment"
         android:label="Parent"
         tools:layout="@layout/fragment_parent" />
+    <fragment
+    android:id="@+id/spellingQuizFragment"
+    android:name="com.brainrot.italiano.ui.screens.spelling.SpellingQuizFragment"
+    android:label="Тест орфографии"
+    tools:layout="@layout/fragment_spelling_quiz" />
 
 </navigation>
