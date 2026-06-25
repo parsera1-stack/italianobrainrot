@@ -77,8 +77,8 @@ class SpellingQuizViewModel @Inject constructor(
     private fun normalizeAnswer(answer: String): String {
         return answer
             .lowercase()
-            .replace(Regex("\s+"), "")
-            .replace(Regex("^(a|an|the)"), "")
+            .replace(Regex("""\s+"""), "")
+            .replace(Regex("""^(a|an|the)"""), "")
     }
 
     sealed class Feedback {
