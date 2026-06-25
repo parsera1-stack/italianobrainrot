@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_home_to_parent"
             app:destination="@id/parentFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_spellingQuizFragment"
+            app:destination="@id/spellingQuizFragment" />
     </fragment>
 
     <fragment
